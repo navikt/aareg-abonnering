@@ -38,3 +38,4 @@ jobs:
           RESOURCE: src/main/kubernetes/naisjob.yaml
           WORKLOAD_IMAGE: ${{ steps.docker-build-push.outputs.image }}
           TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
+          WAIT: false
