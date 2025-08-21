@@ -7,7 +7,6 @@ metadata:
   name: aareg-abonnering
   namespace: arbeidsforhold
 spec:
-  image: {{ image }}
   env:
     - name: JDK_JAVA_OPTIONS
       value: $(JAVA_PROXY_OPTIONS) -XX:MinRAMPercentage=25.0 -XX:MaxRAMPercentage=75.0 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heap.hprof
