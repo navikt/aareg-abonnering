@@ -3,7 +3,7 @@ RUN apt-get update;apt-get install -y unzip=6.0-29
 RUN mkdir -p /app/jre
 COPY . /app
 WORKDIR /app
-RUN mvn clean package -DskipTests;unzip /app/target/app-jlink.zip -d /app/jre;chmod -R 755
+RUN mvn clean package -DskipTests;unzip /app/target/app-jlink.zip -d /app/jre
 
 FROM gcr.io/distroless/base@sha256:4f6e739881403e7d50f52a4e574c4e3c88266031fd555303ee2f1ba262523d6a
 LABEL maintainer="Team Arbeidsforhold"
