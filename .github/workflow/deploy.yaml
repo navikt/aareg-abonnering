@@ -1,0 +1,41 @@
+name: Build and deploy
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build_and_push:
+    name: bygg docker image
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.docker-push.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+        name: Hent prosjekt
+        with:
+          fetch-depth: 0 # Fetch all history for what-changed action
+      - name: Sjekk hva som er endret
+        id: changed-files
+        uses: "nais/what-changed@main"
+        with:
+          files: src/main/kubernetes/naisjob.yaml
+      - name: Bygg og push docker-image
+        if: steps.changed-files.outputs.changed != 'only-inputs'
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          dockerfile: src/main/docker/Dockerfile
+          team: arbeidsforhold
+          build-args:
+            - moduleMain: no.nav.aareg.abonnering/no.nav.aareg.abonnering.Jobb
+      - name: Deploy til Nais
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: src/main/kubernetes/naisjob.yaml
+          WORKLOAD_IMAGE: ${{ steps.docker-build-push.outputs.image }}
+          TELEMETRY: ${{ steps.docker-build-push.outputs.telemetry }}
