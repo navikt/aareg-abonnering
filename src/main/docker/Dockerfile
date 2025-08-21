@@ -5,8 +5,6 @@ RUN mkdir -p /app/jre
 COPY . /app
 WORKDIR /app
 RUN mvn clean package -DskipTests;unzip /app/target/app-jlink.zip -d /app/jre
-ARG MODULE_MAIN
-RUN echo "-m \"$MODULE_MAIN\"\n--module-path /app/app.jar:/app/dependency\n" > arguments
 
 FROM gcr.io/distroless/base@sha256:4f6e739881403e7d50f52a4e574c4e3c88266031fd555303ee2f1ba262523d6a
 LABEL maintainer="Team Arbeidsforhold"
@@ -16,6 +14,5 @@ COPY --from=bygging /app/jre/lib/* /usr/lib
 COPY --from=bygging --exclude=/app/jre/lib /app/jre /app/jre
 COPY --from=bygging /app/target/dependency /app/target/dependency
 COPY --from=bygging /app/target/app.jar /app/app.jar
-COPY --from=bygging /app/arguments /app/arguments
 
-ENTRYPOINT ["/app/jre/bin/java", "@/app/arguments"]
+ENTRYPOINT ["/app/jre/bin/java", "--module-path", "/app/app.jar:/app/dependency\n", "-m", "no.nav.aareg.abonnering/no.nav.aareg.abonnering.Jobb"]
