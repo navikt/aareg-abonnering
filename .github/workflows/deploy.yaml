@@ -24,7 +24,7 @@ jobs:
         with:
           files: src/main/kubernetes/naisjob.yaml
       - name: Bygg og push docker-image
-#        if: steps.changed-files.outputs.changed != 'only-inputs'
+        if: steps.changed-files.outputs.changed != 'only-inputs'
         uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
